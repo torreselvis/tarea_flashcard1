@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Tarjetas de Estudio 28 Elvis Torres</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #74ebd5, #acb6e5);
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #fff;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.4);
+      margin-bottom: 20px;
+    }
+
+    .contenedor-entradas {
+      margin-bottom: 20px;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      outline: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus, button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    #tarjetas {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .tarjeta {
+      width: 200px;
+      height: 200px;
+      background: linear-gradient(135deg, #ffecd2, #fcb69f);
+      border: 2px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.6s, background 0.3s, box-shadow 0.3s;
+      padding: 10px;
+      text-align: center;
+      word-wrap: break-word;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .tarjeta:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    }
+
+    .tarjeta.volteada {
+      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+    }
+
+    .boton-eliminar {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 0, 0, 0.8);
+      color: white;
+      border: none;
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 12px;
+      border-radius: 50%;
+      transition: background 0.3s;
+      z-index: 2;
+    }
+
+    .boton-eliminar:hover {
+      background: rgba(255, 0, 0, 1);
+    }
+
+    .boton-editar {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(33, 150, 243, 0.8);
+      color: white;
+      border: none;
+      padding: 5px 8px;
+      cursor: pointer;
+      font-size: 12px;
+      border-radius: 5px;
+      transition: background 0.3s;
+      z-index: 2;
+    }
+
+    .boton-editar:hover {
+      background: rgba(33, 150, 243, 1);
+    }
+
+    #agregarTarjeta {
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: white;
+      border: none;
+      cursor: pointer;
+      border: 1px solid #333;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    #agregarTarjeta:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Tarjetas de Estudio 28 Elvis Torres</h1>
+
+  <div class="contenedor-entradas">
+    <input type="text" id="pregunta" placeholder="Escribe la pregunta">
+    <input type="text" id="respuesta" placeholder="Escribe la respuesta">
+    <button id="agregarTarjeta">Agregar Tarjeta</button>
+  </div>
+
+  <div id="tarjetas"></div>
+
+  <script>
+    const contenedorTarjetas = document.getElementById('tarjetas');
+    const botonAgregar = document.getElementById('agregarTarjeta');
+
+    botonAgregar.addEventListener('click', () => {
+      const pregunta = document.getElementById('pregunta').value.trim();
+      const respuesta = document.getElementById('respuesta').value.trim();
+
+      if (pregunta === '' || respuesta === '') {
+        alert('Por favor, completa la pregunta y la respuesta.');
+        return;
+      }
+
+      const tarjeta = document.createElement('div');
+      tarjeta.classList.add('tarjeta');
+      tarjeta.innerText = pregunta;
+
+      tarjeta.dataset.pregunta = pregunta;
+      tarjeta.dataset.respuesta = respuesta;
+
+      tarjeta.addEventListener('click', (e) => {
+        if (e.target.classList.contains('boton-eliminar') || e.target.classList.contains('boton-editar')) {
+          return;
+        }
+        if (tarjeta.innerText === tarjeta.dataset.pregunta) {
+          tarjeta.innerText = tarjeta.dataset.respuesta;
+          tarjeta.classList.add('volteada');
+        } else {
+          tarjeta.innerText = tarjeta.dataset.pregunta;
+          tarjeta.classList.remove('volteada');
+        }
+        tarjeta.append(botonEliminar, botonEditar);
+      });
+
+      const botonEliminar = document.createElement('button');
+      botonEliminar.innerText = 'X';
+      botonEliminar.classList.add('boton-eliminar');
+
+      botonEliminar.addEventListener('click', () => {
+        contenedorTarjetas.removeChild(tarjeta);
+      });
+
+      const botonEditar = document.createElement('button');
+      botonEditar.innerText = '✎';
+      botonEditar.classList.add('boton-editar');
+
+      botonEditar.addEventListener('click', () => {
+        const nuevaPregunta = prompt('Edita la pregunta:', tarjeta.dataset.pregunta);
+        const nuevaRespuesta = prompt('Edita la respuesta:', tarjeta.dataset.respuesta);
+
+        if (nuevaPregunta !== null && nuevaRespuesta !== null && nuevaPregunta.trim() && nuevaRespuesta.trim()) {
+          tarjeta.dataset.pregunta = nuevaPregunta.trim();
+          tarjeta.dataset.respuesta = nuevaRespuesta.trim();
+          tarjeta.innerText = tarjeta.dataset.pregunta;
+          tarjeta.classList.remove('volteada');
+          tarjeta.append(botonEliminar, botonEditar);
+        }
+      });
+
+      tarjeta.append(botonEliminar, botonEditar);
+      contenedorTarjetas.append(tarjeta);
+
+      document.getElementById('pregunta').value = '';
+      document.getElementById('respuesta').value = '';
+    });
+  </script>
+
+</body>
+</html>
